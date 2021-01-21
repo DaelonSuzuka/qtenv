@@ -45,7 +45,7 @@ class PersistentListWidget(QListWidget):
     def __init__(self, name, items=[], default=[], changed=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name
-        self.default_selection=default
+        self.default_selection = default
 
         if items:
             self.addItems(items)
