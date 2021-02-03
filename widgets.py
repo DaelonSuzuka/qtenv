@@ -192,8 +192,8 @@ class ConfirmToggleButton(QPushButton):
 class LabelEdit(QWidget):
     text_changed = Signal(str)
 
-    def __init__(self, text, changed=None):
-        super().__init__()
+    def __init__(self, text, *args, changed=None, **kwargs):
+        super().__init__(*args, **kwargs)
         self.setToolTip('doubleclick to edit')
 
         self.label = QLabel(text)
@@ -206,6 +206,12 @@ class LabelEdit(QWidget):
 
         if changed:
             self.text_changed.connect(changed)
+
+    def text(self):
+        return self.label.text()
+
+    def setText(self, text):
+        self.label.setText(text)
 
     def mouseDoubleClickEvent(self, event: PySide2.QtGui.QMouseEvent) -> None:
         self.edit.setText(self.label.text())
