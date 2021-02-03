@@ -187,3 +187,48 @@ class ConfirmToggleButton(QPushButton):
     def update_icon(self):
         if self.icons:
             self.setIcon(self.icons[self.state])
+
+
+class LabelEdit(QWidget):
+    text_changed = Signal(str)
+
+    def __init__(self, text, changed=None):
+        super().__init__()
+        self.setToolTip('doubleclick to edit')
+
+        self.label = QLabel(text)
+        self.edit = QLineEdit()
+        self.edit.installEventFilter(self)
+
+        self.stack = QStackedLayout(self)
+        self.stack.insertWidget(0, self.label)
+        self.stack.insertWidget(1, self.edit)
+
+        if changed:
+            self.text_changed.connect(changed)
+
+    def mouseDoubleClickEvent(self, event: PySide2.QtGui.QMouseEvent) -> None:
+        self.edit.setText(self.label.text())
+        self.edit.setFocus()
+        self.stack.setCurrentIndex(1)
+        return super().mouseDoubleClickEvent(event)
+
+    def accept(self):
+        self.label.setText(self.edit.text())
+        self.text_changed.emit(self.edit.text())
+        self.stack.setCurrentIndex(0)
+
+    def dismiss(self):
+        self.stack.setCurrentIndex(0)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.KeyPress:
+            if event.key() == Qt.Key_Return:
+                self.accept()
+            
+            if event.key() == QtCore.Qt.Key_Escape:
+                self.dismiss()
+                event.accept()
+                return True
+
+        return False
