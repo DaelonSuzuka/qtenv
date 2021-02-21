@@ -41,6 +41,21 @@ class PersistentCheckBox(QCheckBox):
             self.setCheckState(Qt.PartiallyChecked)
 
 
+class PersistentLineEdit(QLineEdit):
+    def __init__(self, name, *args, changed=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        self.restore_state()
+
+        if changed:
+            self.textChanged.connect(changed)
+
+        self.textChanged.connect(lambda: QSettings().setValue(self.name, self.text()))
+    
+    def restore_state(self):
+        self.setText(str(QSettings().value(self.name, '')))
+
+
 class PersistentListWidget(QListWidget):
     def __init__(self, name, items=[], default=[], changed=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
