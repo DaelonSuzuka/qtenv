@@ -42,9 +42,10 @@ class PersistentCheckBox(QCheckBox):
 
 
 class PersistentLineEdit(QLineEdit):
-    def __init__(self, name, *args, changed=None, **kwargs):
+    def __init__(self, name, *args, default='', changed=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name
+        self.default = default
         self.restore_state()
 
         if changed:
@@ -53,7 +54,7 @@ class PersistentLineEdit(QLineEdit):
         self.textChanged.connect(lambda: QSettings().setValue(self.name, self.text()))
     
     def restore_state(self):
-        self.setText(str(QSettings().value(self.name, '')))
+        self.setText(str(QSettings().value(self.name, self.default)))
 
 
 class PersistentListWidget(QListWidget):
