@@ -29,6 +29,9 @@ class ContextLayout:
         self._stack = []
         self.next_layout = None
 
+    def __getattr__(self, name):
+        return getattr(self._layout, name)
+
     @property
     def _layout(self):
         layout = self
@@ -56,6 +59,10 @@ class ContextLayout:
 
     def hbox(self, *args, **kwargs):
         self.next_layout = CHBoxLayout(self._layout, *args, **kwargs)
+        return self
+
+    def grid(self, *args, **kwargs):
+        self.next_layout = CGridLayout(self._layout, *args, **kwargs)
         return self
 
     def __enter__(self):
