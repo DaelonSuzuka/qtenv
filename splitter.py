@@ -11,15 +11,19 @@ class CSplitter(QSplitter):
         if orientation:
             self.setOrientation(orientation)
 
-    def add(self, item, stretch):
+    def add(self, item, stretch=None):
         if isinstance(item, QWidget):
             self.addWidget(item)
-            self.setStretchFactor(self.count()-1, stretch)
+            if stretch:
+                self.setStretchFactor(self.count()-1, stretch)
         elif isinstance(item, QLayout):
-            self.addLayout(item)
+            self.addWidget(QWidget(self, layout=item))
+            if stretch:
+                self.setStretchFactor(self.count()-1, stretch)
         elif isinstance(item, list):
             for i in item:
                 self.add(i)
+        return item
 
     def __enter__(self):
         return self
