@@ -99,6 +99,33 @@ class PersistentListWidget(QListWidget):
                     self.item(i).setSelected(True)
 
 
+class PersistentTreeWidget(QTreeWidget):
+    def __init__(self, name, items=[], index_column=0, default=[], changed=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        self.default_selection = default
+        self.index_column = index_column
+
+        if items:
+            self.addItems(items)
+            self.restore_state()
+                
+        if changed:
+            self.itemSelectionChanged.connect(changed)
+
+        self.itemSelectionChanged.connect(lambda: QSettings().setValue(self.name, self.selected_items()))
+
+    def selected_items(self):
+        return [item.text(self.index_column) for item in self.selectedItems()]
+
+    def restore_state(self):
+        prev_items = QSettings().value(self.name, self.default_selection)
+        if prev_items:
+            for i in range(self.count()):
+                if self.item(i).text(self.index_column) in prev_items:
+                    self.item(i).setSelected(True)
+
+
 class PersistentComboBox(QComboBox):
     def __init__(self, name, items=[], changed=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
