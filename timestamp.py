@@ -2,7 +2,7 @@ from time import time
 
 
 def time_since(timestamp):
-    return (time.time() - timestamp)
+    return (time() - timestamp)
 
 
 class TimeStamp:
