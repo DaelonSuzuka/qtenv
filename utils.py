@@ -1,3 +1,10 @@
+import time
+
+
+def time_since(timestamp):
+    return (time.time() - timestamp)
+
+
 def enable_children(thing):
     """ recursively walk the provided thing and enable all of its widget children """
     for i in range(thing.count()):
