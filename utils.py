@@ -1,8 +1,3 @@
-import time
-
-
-def time_since(timestamp):
-    return (time.time() - timestamp)
 
 
 def enable_children(thing):
